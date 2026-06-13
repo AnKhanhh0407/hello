@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no, viewport-fit=cover">
   <title>Hẹn người yêu đi chơi 💕</title>
   
-  <!-- EmailJS -->
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  
   <style>
     * {
       margin: 0;
@@ -277,16 +274,11 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH EMAILJS CỦA BẠN ====================
+    // ==================== CẤU HÌNH EMAILJS (REST API) ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
     const EMAILJS_SERVICE_ID = "service_3sgcbcb";
     const EMAILJS_TEMPLATE_ID = "hl4y94e";
-    
-    // Email của bạn để nhận thông báo
-    const YOUR_EMAIL = "ankhanh0407@gmail.com"; // 👈 THAY BẰNG EMAIL THẬT CỦA BẠN
-
-    // Khởi tạo EmailJS
-    emailjs.init(EMAILJS_PUBLIC_KEY);
+    const YOUR_EMAIL = "ankhanh0407@gmail.com"; // 👈 THAY BẰNG EMAIL CỦA BẠN
 
     // ====== State ======
     let selectedPlace = null;
@@ -346,46 +338,64 @@
       }
     }
 
-    // ====== GỬI EMAIL THÔNG BÁO QUA EMAILJS ======
+    // ====== GỬI EMAIL DÙNG REST API (KHÔNG DÙNG SDK CŨ) ======
     function sendEmailNotification(formattedDate, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Template của bạn có: {{name}}, {{message}}, {{email}}
-      const templateParams = {
-        name: 'Em yêu',                           // 👈 Tên hiển thị
-        email: YOUR_EMAIL,                         // 👈 Email nhận thông báo
-        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
+      // Dùng REST API trực tiếp - không cần SDK
+      const url = `https://api.emailjs.com/api/v1.0/email/send`;
+      
+      const data = {
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        accessToken: EMAILJS_PUBLIC_KEY,
+        template_params: {
+          name: 'Em yêu',
+          email: YOUR_EMAIL,
+          message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
+        }
       };
 
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-        .then(function(response) {
-          console.log('✅ Email sent!', response.status);
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('✅ Email sent!');
           loadingMsg.style.display = 'none';
           notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh thành công!';
           notifyStatus.className = 'success-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
           
-          // Chuyển sang trang 4 sau 1.5 giây
           setTimeout(() => {
             showPage(page4);
           }, 1500);
-        }, function(error) {
-          console.log('❌ Failed:', error);
-          loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '⚠️ Lỗi gửi mail nhưng lịch hẹn vẫn được lưu nè!';
-          notifyStatus.className = 'error-msg';
-          toFinalBtn.disabled = false;
-          toFinalBtn.style.opacity = '1';
-          
-          // Vẫn chuyển trang dù lỗi
-          setTimeout(() => {
-            showPage(page4);
-          }, 1000);
-        });
+        } else {
+          throw new Error('Response not OK');
+        }
+      })
+      .catch(error => {
+        console.log('❌ Failed:', error);
+        loadingMsg.style.display = 'none';
+        notifyStatus.innerText = '⚠️ Không gửi được mail, nhưng lịch vẫn lưu nè! 💕';
+        notifyStatus.className = 'error-msg';
+        toFinalBtn.disabled = false;
+        toFinalBtn.style.opacity = '1';
+        
+        // Vẫn chuyển trang dù lỗi
+        setTimeout(() => {
+          showPage(page4);
+        }, 1000);
+      });
     }
 
     // ====== PAGE 1 ======
@@ -487,7 +497,7 @@
         <div style="margin-top:12px; text-align:center; font-style:italic;">💞 Anh chờ em tới lun 💞</div>
       `;
 
-      // Gửi email thông báo cho bạn
+      // Gửi email thông báo
       sendEmailNotification(formattedDate, placeDisplay);
     });
 
