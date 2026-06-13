@@ -273,9 +273,9 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH EMAILJS (ĐÃ SỬA ĐÚNG) ====================
+    // ==================== CẤU HÌNH EMAILJS (ĐÃ CẬP NHẬT) ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
-    const EMAILJS_SERVICE_ID = "service_d11essi";   // ✅ ĐÃ SỬA ĐÚNG
+    const EMAILJS_SERVICE_ID = "service_iprl12s";   // ✅ SERVICE ID MỚI
     const EMAILJS_TEMPLATE_ID = "hl4y94e";          // ✅ GIỮ NGUYÊN
     
     // Khởi tạo EmailJS
@@ -344,23 +344,20 @@
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Tạo nội dung tin nhắn
-      const fullMessage = `✨ Em yêu đã đặt lịch hẹn với anh! ✨\n\n📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n\n💕 Yêu anh nhiều! 💕`;
-
-      // Template chỉ cần name và email
+      // Chỉ gửi 2 biến đúng với template
       const templateParams = {
         name: "Em yêu 💕",
         email: "ankhanhh0407@gmail.com"
       };
 
-      console.log("Đang gửi email với Service ID:", EMAILJS_SERVICE_ID);
+      console.log("Service ID đang dùng:", EMAILJS_SERVICE_ID);
       console.log("Template ID:", EMAILJS_TEMPLATE_ID);
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
-          console.log('✅ GỬI THÀNH CÔNG!', response.status, response.text);
+          console.log('✅ THÀNH CÔNG!', response.status, response.text);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '✅ Đã gửi thông báo! Kiểm email (cả Spam) nha 💌';
+          notifyStatus.innerText = '✅ Đã gửi thông báo! Kiểm tra email (cả Spam) nha 💌';
           notifyStatus.className = 'success-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
@@ -369,9 +366,9 @@
             showPage(page4);
           }, 1500);
         }, function(error) {
-          console.log('❌ LỖI:', error);
+          console.log('❌ LỖI CHI TIẾT:', error);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn lưu nha 💕';
+          notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn được lưu nha 💕';
           notifyStatus.className = 'error-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
