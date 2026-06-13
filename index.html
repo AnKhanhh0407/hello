@@ -275,8 +275,8 @@
   (function() {
     // ==================== CẤU HÌNH EMAILJS (ĐÃ CẬP NHẬT) ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
-    const EMAILJS_SERVICE_ID = "service_iprl12s";   // ✅ SERVICE ID MỚI
-    const EMAILJS_TEMPLATE_ID = "hl4y94e";          // ✅ GIỮ NGUYÊN
+    const EMAILJS_SERVICE_ID = "service_iprl12s";
+    const EMAILJS_TEMPLATE_ID = "template_zp410qu";   // ✅ TEMPLATE ID MỚI
     
     // Khởi tạo EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -344,14 +344,21 @@
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Chỉ gửi 2 biến đúng với template
+      // Tạo nội dung tin nhắn đầy đủ
+      const fullMessage = `✨ Em yêu đã đặt lịch hẹn với anh! ✨\n\n📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n\n💕 Yêu anh nhiều! 💕`;
+
+      // Gửi với các biến phù hợp
       const templateParams = {
         name: "Em yêu 💕",
-        email: "ankhanhh0407@gmail.com"
+        email: "ankhanhh0407@gmail.com",
+        message: fullMessage,
+        date: formattedDate,
+        place: placeDisplay
       };
 
-      console.log("Service ID đang dùng:", EMAILJS_SERVICE_ID);
+      console.log("Service ID:", EMAILJS_SERVICE_ID);
       console.log("Template ID:", EMAILJS_TEMPLATE_ID);
+      console.log("Đang gửi:", templateParams);
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
