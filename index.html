@@ -47,7 +47,7 @@
     h2 {
       font-size: 2.2rem;
       color: #d43f6b;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-weight: 700;
       letter-spacing: -0.5px;
       word-break: break-word;
@@ -59,12 +59,35 @@
       filter: drop-shadow(0 8px 12px rgba(255, 105, 135, 0.3));
     }
 
+    /* Ảnh đôi */
+    .couple-img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #ffb7c5;
+      box-shadow: 0 8px 25px rgba(255, 105, 135, 0.4);
+      margin: 10px auto;
+      display: block;
+    }
+
+    .couple-img-small {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #ffb7c5;
+      box-shadow: 0 6px 20px rgba(255, 105, 135, 0.35);
+      margin: 10px auto 15px;
+      display: block;
+    }
+
     .buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       justify-content: center;
-      margin: 28px 0 18px;
+      margin: 20px 0 18px;
     }
 
     .btn {
@@ -187,16 +210,16 @@
     }
 
     .love-final {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: #ce3660;
-      margin: 15px 0 8px;
+      margin: 10px 0 5px;
     }
 
     .sub-text {
       color: #b44b63;
       font-size: 1.2rem;
-      margin: 6px 0 18px;
+      margin: 6px 0 15px;
       font-style: italic;
     }
 
@@ -213,9 +236,14 @@
 </head>
 <body>
 <div class="container" id="appContainer">
-  <!-- TRANG 1: Em có yêu anh không -->
+
+  <!-- ==================== TRANG 1 ==================== -->
   <div id="page1" class="page">
     <div class="emoji-big">🥺💗</div>
+
+    <!-- 🌟 ẢNH ĐÔI -->
+    <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img">
+
     <h2>Em có yêu anh không?</h2>
     <div class="buttons">
       <button class="btn yes-btn" id="yesLoveBtn">Yêu nhiều ❤️</button>
@@ -224,7 +252,7 @@
     <div id="loveMessage" class="message-box" style="display: none;"></div>
   </div>
 
-  <!-- TRANG 2: Chọn lịch đi chơi -->
+  <!-- ==================== TRANG 2 ==================== -->
   <div id="page2" class="page hidden-page">
     <div class="emoji-big">📅✨</div>
     <h2>Chọn ngày đi chơi nè</h2>
@@ -233,7 +261,7 @@
     <div id="dateWarning" style="color:#d43f6b; margin-top:8px; font-weight:500;"></div>
   </div>
 
-  <!-- TRANG 3: Chọn nơi muốn đi -->
+  <!-- ==================== TRANG 3 ==================== -->
   <div id="page3" class="page hidden-page">
     <div class="emoji-big">📍🍜</div>
     <h2>Muốn đi đâu nhất?</h2>
@@ -248,9 +276,13 @@
     <div id="placeWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
   </div>
 
-  <!-- TRANG 4: Tuân lệnh embe -->
+  <!-- ==================== TRANG 4 ==================== -->
   <div id="page4" class="page hidden-page">
     <div class="emoji-big">👑🐣</div>
+
+    <!-- 🌟 ẢNH ĐÔI -->
+    <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img-small">
+
     <h2 class="love-final">Tuân lệnh embeiuuuu</h2>
     <div style="font-size:2.4rem;">💖🐻💖</div>
     <p class="sub-text">Iu embe nhìu lắm luôn ý</p>
@@ -264,7 +296,7 @@
 <script>
   (function() {
     // ----- State -----
-    let selectedPlace = null;       // 'Đi ăn', 'Đi chơi', 'Đi lượn', or custom string
+    let selectedPlace = null;
     let customPlaceText = '';
 
     // ----- DOM elements -----
@@ -311,7 +343,6 @@
         customPlaceInput.style.display = 'none';
         customPlaceInput.value = '';
       }
-      // remove selected class from chips
       placeChips.forEach(chip => chip.classList.remove('selected'));
       if (datePicker) datePicker.value = '';
       if (dateWarning) dateWarning.innerText = '';
@@ -324,19 +355,14 @@
 
     // ----- PAGE 1: Xử lý nút Không -----
     noLoveBtn.addEventListener('click', function(e) {
-      // Hiển thị thông báo "oops sai rùi" và yêu cầu chọn lại
       loveMessage.style.display = 'block';
       loveMessage.innerText = '🙈 Oops sai rùi! Chọn lại đi em ơi 💗';
-      // Không chuyển trang, chỉ hiện thông báo đáng yêu
     });
 
     // ----- PAGE 1: Nút Yêu nhiều -> sang trang 2 -----
     yesLoveBtn.addEventListener('click', function() {
-      // Ẩn thông báo nếu có
       loveMessage.style.display = 'none';
-      // reset các lựa chọn trước đó để sạch sẽ
       resetSelectionState();
-      // set ngày mặc định là hôm nay (để tiện)
       if (datePicker) {
         const today = new Date();
         const yyyy = today.getFullYear();
@@ -347,7 +373,7 @@
       showPage(page2);
     });
 
-    // ----- PAGE 2: chọn ngày -> sang trang 3 (kiểm tra có chọn ngày) -----
+    // ----- PAGE 2: chọn ngày -> sang trang 3 -----
     toPlaceBtn.addEventListener('click', function() {
       const dateValue = datePicker.value;
       if (!dateValue) {
@@ -355,37 +381,27 @@
         return;
       }
       dateWarning.innerText = '';
-      // Lưu ý: không cần lưu riêng, sẽ lấy từ input khi tổng hợp
       showPage(page3);
     });
 
-    // ----- PAGE 3: Xử lý chọn nơi (chip) -----
+    // ----- PAGE 3: Xử lý chọn nơi -----
     placeChips.forEach(chip => {
       chip.addEventListener('click', function(e) {
         const place = this.dataset.place;
-        
-        // Xóa selected tất cả chips
         placeChips.forEach(c => c.classList.remove('selected'));
         
         if (place === 'custom') {
-          // Hiện input nhập tùy chọn khác
           customPlaceInput.style.display = 'block';
           customPlaceInput.focus();
-          // Thêm class selected cho chip "Khác"
           this.classList.add('selected');
-          // Reset selectedPlace thành null, chờ nhập text
           selectedPlace = null;
-          // Nếu đã có text trong input thì cập nhật
           if (customPlaceInput.value.trim() !== '') {
             selectedPlace = customPlaceInput.value.trim();
           }
         } else {
-          // Ẩn input custom
           customPlaceInput.style.display = 'none';
-          // Đặt selectedPlace là lựa chọn có sẵn
           selectedPlace = place;
           this.classList.add('selected');
-          // Xóa custom text cũ
           customPlaceText = '';
           customPlaceInput.value = '';
         }
@@ -393,36 +409,31 @@
       });
     });
 
-    // Khi người dùng gõ vào ô custom, cập nhật selectedPlace
+    // Khi người dùng gõ vào ô custom
     customPlaceInput.addEventListener('input', function() {
       const val = this.value.trim();
       if (val !== '') {
         selectedPlace = val;
         customPlaceText = val;
-        // Đảm bảo chip "Khác" vẫn selected
         placeChips.forEach(c => c.classList.remove('selected'));
         customChip.classList.add('selected');
       } else {
-        // Nếu xoá trắng thì coi như chưa chọn
         selectedPlace = null;
         customPlaceText = '';
-        customChip.classList.add('selected'); // vẫn giữ chip khác selected
+        customChip.classList.add('selected');
       }
       placeWarning.innerText = '';
     });
 
-    // Khi bấm nút tiếp từ trang 3 sang trang 4
+    // ----- PAGE 3 -> PAGE 4 -----
     toFinalBtn.addEventListener('click', function() {
-      // Kiểm tra đã chọn nơi chưa
       if (!selectedPlace) {
         placeWarning.innerText = '💬 Bé chọn một nơi muốn đi nha (hoặc nhập khác)';
         return;
       }
-      // Tổng hợp thông tin hiển thị trang 4
       const dateVal = datePicker.value;
       let displayDate = '📆 Chưa chọn ngày';
       if (dateVal) {
-        // format ngày thân thiện dd/mm/yyyy
         const [year, month, day] = dateVal.split('-');
         displayDate = `📅 ${day}/${month}/${year}`;
       }
@@ -443,16 +454,13 @@
       showPage(page4);
     });
 
-    // ----- Quay lại từ đầu (restart) -----
+    // ----- Restart -----
     restartBtn.addEventListener('click', function() {
       resetSelectionState();
-      // quay về trang 1
       showPage(page1);
-      // Ẩn message nếu có
       if (loveMessage) {
         loveMessage.style.display = 'none';
       }
-      // reset date về hôm nay để lần sau dùng
       if (datePicker) {
         const today = new Date();
         const yyyy = today.getFullYear();
@@ -462,7 +470,7 @@
       }
     });
 
-    // Khởi tạo ban đầu: set ngày hôm nay cho datePicker (khi load trang)
+    // Khởi tạo
     window.addEventListener('load', function() {
       if (datePicker) {
         const today = new Date();
@@ -471,11 +479,8 @@
         const dd = String(today.getDate()).padStart(2, '0');
         datePicker.value = `${yyyy}-${mm}-${dd}`;
       }
-      // đảm bảo trang 1 hiện
       showPage(page1);
     });
-
-    // Xử lý nếu ai đó cố tình nhấn "Không" nhiều lần vẫn ổn.
   })();
 </script>
 </body>
