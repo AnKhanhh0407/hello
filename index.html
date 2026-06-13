@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no, viewport-fit=cover">
   <title>Hẹn người yêu đi chơi 💕</title>
-  
   <style>
     * {
       margin: 0;
@@ -220,7 +219,6 @@
 <body>
 <div class="container" id="appContainer">
 
-  <!-- ==================== TRANG 1 ==================== -->
   <div id="page1" class="page">
     <div class="emoji-big">🥺💗</div>
     <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img">
@@ -232,7 +230,6 @@
     <div id="loveMessage" class="message-box" style="display: none;"></div>
   </div>
 
-  <!-- ==================== TRANG 2 ==================== -->
   <div id="page2" class="page hidden-page">
     <div class="emoji-big">📅✨</div>
     <h2>Chọn ngày đi chơi nè</h2>
@@ -241,7 +238,6 @@
     <div id="dateWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
   </div>
 
-  <!-- ==================== TRANG 3 ==================== -->
   <div id="page3" class="page hidden-page">
     <div class="emoji-big">📍🍜</div>
     <h2>Muốn đi đâu nhất?</h2>
@@ -258,7 +254,6 @@
     <div id="notifyStatus" class="success-msg"></div>
   </div>
 
-  <!-- ==================== TRANG 4 ==================== -->
   <div id="page4" class="page hidden-page">
     <div class="emoji-big">👑🐣</div>
     <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img-small">
@@ -274,16 +269,11 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH EMAILJS (REST API) ====================
-    const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
-    const EMAILJS_SERVICE_ID = "service_3sgcbcb";
-    const EMAILJS_TEMPLATE_ID = "hl4y94e";
-    const YOUR_EMAIL = "ankhanhh0407@gmail.com"; // 👈 THAY BẰNG EMAIL CỦA BẠN
+    // ==================== GOOGLE APPS SCRIPT URL ====================
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxxx/exec"; // 👈 THAY BẰNG URL CỦA BẠN
 
-    // ====== State ======
     let selectedPlace = null;
 
-    // ====== DOM ======
     const page1 = document.getElementById('page1');
     const page2 = document.getElementById('page2');
     const page3 = document.getElementById('page3');
@@ -308,7 +298,6 @@
     const summaryBox = document.getElementById('summaryBox');
     const restartBtn = document.getElementById('restartBtn');
 
-    // ====== Helper ======
     function showPage(page) {
       page1.classList.add('hidden-page');
       page2.classList.add('hidden-page');
@@ -338,67 +327,48 @@
       }
     }
 
-    // ====== GỬI EMAIL DÙNG REST API (KHÔNG DÙNG SDK CŨ) ======
-    function sendEmailNotification(formattedDate, placeDisplay) {
+    // ====== GỬI QUA GOOGLE APPS SCRIPT ======
+    function sendNotification(dateVal, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Dùng REST API trực tiếp - không cần SDK
-      const url = `https://api.emailjs.com/api/v1.0/email/send`;
-      
-      const data = {
-        service_id: EMAILJS_SERVICE_ID,
-        template_id: EMAILJS_TEMPLATE_ID,
-        user_id: EMAILJS_PUBLIC_KEY,
-        accessToken: EMAILJS_PUBLIC_KEY,
-        template_params: {
-          name: 'Em yêu',
-          email: YOUR_EMAIL,
-          message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
-        }
-      };
-
-      fetch(url, {
+      fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          date: dateVal,
+          place: placeDisplay
+        })
       })
-      .then(response => {
-        if (response.ok) {
-          console.log('✅ Email sent!');
-          loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh thành công!';
-          notifyStatus.className = 'success-msg';
-          toFinalBtn.disabled = false;
-          toFinalBtn.style.opacity = '1';
-          
-          setTimeout(() => {
-            showPage(page4);
-          }, 1500);
-        } else {
-          throw new Error('Response not OK');
-        }
-      })
-      .catch(error => {
-        console.log('❌ Failed:', error);
+      .then(() => {
         loadingMsg.style.display = 'none';
-        notifyStatus.innerText = '⚠️ Không gửi được mail, nhưng lịch vẫn lưu nè! 💕';
+        notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh! Kiểm tra email nha 💌';
+        notifyStatus.className = 'success-msg';
+        toFinalBtn.disabled = false;
+        toFinalBtn.style.opacity = '1';
+        
+        setTimeout(() => {
+          showPage(page4);
+        }, 1500);
+      })
+      .catch(() => {
+        loadingMsg.style.display = 'none';
+        notifyStatus.innerText = '⚠️ Lỗi mạng nhưng lịch vẫn lưu nè! 💕';
         notifyStatus.className = 'error-msg';
         toFinalBtn.disabled = false;
         toFinalBtn.style.opacity = '1';
         
-        // Vẫn chuyển trang dù lỗi
         setTimeout(() => {
           showPage(page4);
         }, 1000);
       });
     }
 
-    // ====== PAGE 1 ======
     noLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'block';
       loveMessage.innerText = '🙈 Oops sai rùi! Chọn lại đi em ơi 💗';
@@ -417,7 +387,6 @@
       showPage(page2);
     });
 
-    // ====== PAGE 2 ======
     toPlaceBtn.addEventListener('click', function() {
       const dateValue = datePicker.value;
       if (!dateValue) {
@@ -428,7 +397,6 @@
       showPage(page3);
     });
 
-    // ====== PAGE 3 ======
     placeChips.forEach(chip => {
       chip.addEventListener('click', function() {
         const place = this.dataset.place;
@@ -467,7 +435,6 @@
       notifyStatus.innerText = '';
     });
 
-    // ====== GỬI LỊCH HẸN ======
     toFinalBtn.addEventListener('click', function() {
       if (!selectedPlace) {
         placeWarning.innerText = '💬 Bé chọn một nơi muốn đi nha (hoặc nhập khác)';
@@ -489,7 +456,6 @@
       else if (selectedPlace === 'Đi lượn') placeDisplay = '🌃 Đi lượn';
       else placeDisplay = `✨ ${selectedPlace}`;
 
-      // Cập nhật summary box
       summaryBox.innerHTML = `
         <div style="font-size:1.3rem; text-align:center; margin-bottom:10px;">📋 Chi tiết hẹn hò</div>
         <div>📅 ${displayDate}</div>
@@ -497,11 +463,9 @@
         <div style="margin-top:12px; text-align:center; font-style:italic;">💞 Anh chờ em tới lun 💞</div>
       `;
 
-      // Gửi email thông báo
-      sendEmailNotification(formattedDate, placeDisplay);
+      sendNotification(formattedDate, placeDisplay);
     });
 
-    // ====== RESTART ======
     restartBtn.addEventListener('click', function() {
       resetSelectionState();
       showPage(page1);
@@ -515,7 +479,6 @@
       }
     });
 
-    // ====== KHỞI TẠO ======
     window.addEventListener('load', function() {
       if (datePicker) {
         const today = new Date();
