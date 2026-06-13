@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no, viewport-fit=cover">
   <title>Hẹn người yêu đi chơi 💕</title>
+  
+  <!-- EmailJS -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  
   <style>
     * {
       margin: 0;
@@ -25,60 +29,48 @@
     .container {
       width: 100%;
       max-width: 450px;
-      background: rgba(255, 245, 250, 0.85);
-      backdrop-filter: blur(20px);
       background: #fff0f5;
       box-shadow: 0 25px 50px -10px rgba(233, 120, 160, 0.25);
       border-radius: 40px;
       padding: 30px 24px;
       text-align: center;
-      transition: all 0.2s ease;
       border: 1px solid rgba(255, 182, 193, 0.6);
     }
 
-    .page {
-      display: block;
-    }
-
-    .hidden-page {
-      display: none !important;
-    }
+    .page { display: block; }
+    .hidden-page { display: none !important; }
 
     h2 {
       font-size: 2.2rem;
       color: #d43f6b;
       margin-bottom: 10px;
       font-weight: 700;
-      letter-spacing: -0.5px;
-      word-break: break-word;
     }
 
     .emoji-big {
-      font-size: 4.5rem;
-      margin: 12px 0 8px;
-      filter: drop-shadow(0 8px 12px rgba(255, 105, 135, 0.3));
+      font-size: 4rem;
+      margin: 8px 0;
     }
 
-    /* Ảnh đôi */
     .couple-img {
-      width: 180px;
-      height: 180px;
+      width: 160px;
+      height: 160px;
       object-fit: cover;
       border-radius: 50%;
-      border: 5px solid #ffb7c5;
+      border: 4px solid #ffb7c5;
       box-shadow: 0 8px 25px rgba(255, 105, 135, 0.4);
-      margin: 10px auto;
+      margin: 8px auto;
       display: block;
     }
 
     .couple-img-small {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       object-fit: cover;
       border-radius: 50%;
       border: 4px solid #ffb7c5;
       box-shadow: 0 6px 20px rgba(255, 105, 135, 0.35);
-      margin: 10px auto 15px;
+      margin: 8px auto 12px;
       display: block;
     }
 
@@ -87,43 +79,29 @@
       flex-wrap: wrap;
       gap: 16px;
       justify-content: center;
-      margin: 20px 0 18px;
+      margin: 16px 0;
     }
 
     .btn {
-      background: white;
-      border: none;
-      padding: 16px 32px;
+      padding: 14px 28px;
       border-radius: 100px;
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       cursor: pointer;
       background: #ffe4ec;
       color: #b3405a;
       box-shadow: 0 8px 18px rgba(200, 100, 120, 0.25);
-      transition: all 0.2s ease;
-      flex: 1 1 auto;
-      min-width: 130px;
       border: 1px solid #ffb6c1;
-      backdrop-filter: blur(4px);
-      letter-spacing: 0.3px;
+      flex: 1 1 auto;
+      min-width: 120px;
       touch-action: manipulation;
-    }
-
-    .btn:hover {
-      background: #ffd0db;
-      transform: scale(1.02);
-      box-shadow: 0 12px 22px rgba(210, 80, 110, 0.35);
+      transition: 0.2s;
+      border: none;
     }
 
     .btn:active {
       transform: scale(0.96);
       background: #ffbacb;
-    }
-
-    .no-btn {
-      background: #fce4ec;
-      color: #b3415c;
     }
 
     .yes-btn {
@@ -135,54 +113,46 @@
     .message-box {
       background: #fff0f3;
       border-radius: 30px;
-      padding: 14px 18px;
-      margin: 15px 0 10px;
+      padding: 12px 16px;
+      margin: 12px 0;
       color: #c13b57;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       border: 1px dashed #f590a8;
     }
 
-    select, input[type="date"], input[type="text"] {
+    input[type="date"], input[type="text"] {
       width: 100%;
-      padding: 16px 18px;
+      padding: 14px 18px;
       border-radius: 60px;
       border: 1px solid #ffb7c5;
-      background: #fff5f8;
       font-size: 1.1rem;
-      margin: 10px 0 16px;
+      margin: 8px 0 14px;
       outline: none;
-      color: #632c3b;
-      font-weight: 500;
       text-align: center;
       background: white;
-      box-shadow: inset 0 2px 8px rgba(255, 140, 160, 0.15);
-      -webkit-appearance: none;
-      appearance: none;
       font-family: inherit;
     }
 
     .option-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 10px;
       justify-content: center;
-      margin: 18px 0 14px;
+      margin: 14px 0;
     }
 
     .chip {
-      background: #ffeaf1;
-      padding: 14px 20px;
+      background: white;
+      padding: 12px 16px;
       border-radius: 50px;
       font-weight: 600;
       color: #b13b53;
       cursor: pointer;
       border: 1px solid #f9a5b9;
-      transition: 0.2s;
-      flex: 1 1 calc(50% - 14px);
-      min-width: 120px;
+      flex: 1 1 calc(50% - 10px);
+      min-width: 100px;
       text-align: center;
-      background: white;
       box-shadow: 0 4px 10px rgba(255, 140, 170, 0.2);
     }
 
@@ -190,47 +160,63 @@
       background: #f7738b;
       color: white;
       border-color: #e64a6b;
-      box-shadow: 0 10px 18px #f1607c70;
-      font-weight: 700;
+      box-shadow: 0 8px 18px #f1607c70;
     }
 
     .next-btn {
-      background: #ff7b9c;
+      background: linear-gradient(135deg, #fd7b9c, #e75472);
       color: white;
-      margin-top: 20px;
+      margin-top: 16px;
       width: 100%;
-      font-size: 1.4rem;
-      padding: 18px;
+      font-size: 1.3rem;
+      padding: 16px;
       border: none;
       border-radius: 100px;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #fd7b9c, #e75472);
       box-shadow: 0 12px 24px rgba(235, 80, 110, 0.45);
+      cursor: pointer;
     }
 
     .love-final {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: #ce3660;
-      margin: 10px 0 5px;
+      margin: 8px 0;
     }
 
     .sub-text {
       color: #b44b63;
-      font-size: 1.2rem;
-      margin: 6px 0 15px;
+      font-size: 1.1rem;
+      margin: 4px 0 12px;
       font-style: italic;
     }
 
-    hr {
-      border: 0.5px solid #ffc0cb;
-      margin: 20px 0 8px;
-      opacity: 0.7;
+    .loading-msg {
+      display: none;
+      margin: 10px 0;
+      color: #e75472;
+      font-weight: 600;
+      font-size: 1rem;
+      animation: pulse 1s infinite;
     }
-
-    button {
-      user-select: none;
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .success-msg {
+      color: #4caf50;
+      font-weight: 700;
+      font-size: 1rem;
+      margin: 8px 0;
+    }
+    
+    .error-msg {
+      color: #f44336;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 8px 0;
     }
   </style>
 </head>
@@ -240,10 +226,7 @@
   <!-- ==================== TRANG 1 ==================== -->
   <div id="page1" class="page">
     <div class="emoji-big">🥺💗</div>
-
-    <!-- 🌟 ẢNH ĐÔI -->
     <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img">
-
     <h2>Em có yêu anh không?</h2>
     <div class="buttons">
       <button class="btn yes-btn" id="yesLoveBtn">Yêu nhiều ❤️</button>
@@ -258,7 +241,7 @@
     <h2>Chọn ngày đi chơi nè</h2>
     <input type="date" id="datePicker" />
     <button class="btn next-btn" id="toPlaceBtn">Tiếp theo ➡️</button>
-    <div id="dateWarning" style="color:#d43f6b; margin-top:8px; font-weight:500;"></div>
+    <div id="dateWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
   </div>
 
   <!-- ==================== TRANG 3 ==================== -->
@@ -272,21 +255,20 @@
       <div class="chip" data-place="custom" id="customChip">✍️ Khác...</div>
     </div>
     <input type="text" id="customPlaceInput" placeholder="Nhập nơi em thích..." style="display:none; margin-top:6px;" />
+    <div class="loading-msg" id="loadingMsg">⏳ Đang gửi lịch hẹn cho anh yêu...</div>
     <button class="btn next-btn" id="toFinalBtn">Gửi lịch hẹn 💌</button>
     <div id="placeWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
+    <div id="notifyStatus" class="success-msg"></div>
   </div>
 
   <!-- ==================== TRANG 4 ==================== -->
   <div id="page4" class="page hidden-page">
     <div class="emoji-big">👑🐣</div>
-
-    <!-- 🌟 ẢNH ĐÔI -->
     <img src="https://raw.githubusercontent.com/AnKhanhh0407/hello/main/159b4754-1a31-4709-af05-9b12b5d67147.jpg" alt="Ảnh đôi mình" class="couple-img-small">
-
     <h2 class="love-final">Tuân lệnh embeiuuuu</h2>
-    <div style="font-size:2.4rem;">💖🐻💖</div>
+    <div style="font-size:2rem;">💖🐻💖</div>
     <p class="sub-text">Iu embe nhìu lắm luôn ý</p>
-    <div id="summaryBox" style="background: #ffeef4; border-radius: 28px; padding: 20px; margin: 18px 0; color:#bf2f4b; font-weight:600; font-size:1.2rem; text-align:left; line-height:1.8;">
+    <div id="summaryBox" style="background: #ffeef4; border-radius: 28px; padding: 18px; margin: 14px 0; color:#bf2f4b; font-weight:600; font-size:1.1rem; text-align:left; line-height:1.8;">
       ⏳ Đang tổng hợp...
     </div>
     <button class="btn next-btn" id="restartBtn" style="background:#ffb7c5; color:#a13048;">Hẹn lại từ đầu 🔁</button>
@@ -295,38 +277,46 @@
 
 <script>
   (function() {
-    // ----- State -----
-    let selectedPlace = null;
-    let customPlaceText = '';
+    // ==================== CẤU HÌNH EMAILJS CỦA BẠN ====================
+    const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
+    const EMAILJS_SERVICE_ID = "service_3sgcbcb";
+    const EMAILJS_TEMPLATE_ID = "hl4y94e";
+    
+    // Email của bạn để nhận thông báo
+    const YOUR_EMAIL = "ankhanh0407@gmail.com"; // 👈 THAY BẰNG EMAIL THẬT CỦA BẠN
 
-    // ----- DOM elements -----
+    // Khởi tạo EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // ====== State ======
+    let selectedPlace = null;
+
+    // ====== DOM ======
     const page1 = document.getElementById('page1');
     const page2 = document.getElementById('page2');
     const page3 = document.getElementById('page3');
     const page4 = document.getElementById('page4');
 
-    // Page 1
     const yesLoveBtn = document.getElementById('yesLoveBtn');
     const noLoveBtn = document.getElementById('noLoveBtn');
     const loveMessage = document.getElementById('loveMessage');
 
-    // Page 2
     const datePicker = document.getElementById('datePicker');
     const toPlaceBtn = document.getElementById('toPlaceBtn');
     const dateWarning = document.getElementById('dateWarning');
 
-    // Page 3
     const placeChips = document.querySelectorAll('#placeOptions .chip');
     const customChip = document.getElementById('customChip');
     const customPlaceInput = document.getElementById('customPlaceInput');
     const toFinalBtn = document.getElementById('toFinalBtn');
     const placeWarning = document.getElementById('placeWarning');
+    const loadingMsg = document.getElementById('loadingMsg');
+    const notifyStatus = document.getElementById('notifyStatus');
 
-    // Page 4
     const summaryBox = document.getElementById('summaryBox');
     const restartBtn = document.getElementById('restartBtn');
 
-    // ----- Helper: switch page -----
+    // ====== Helper ======
     function showPage(page) {
       page1.classList.add('hidden-page');
       page2.classList.add('hidden-page');
@@ -335,10 +325,8 @@
       page.classList.remove('hidden-page');
     }
 
-    // ----- Reset state for new round (except page1) -----
     function resetSelectionState() {
       selectedPlace = null;
-      customPlaceText = '';
       if (customPlaceInput) {
         customPlaceInput.style.display = 'none';
         customPlaceInput.value = '';
@@ -347,19 +335,65 @@
       if (datePicker) datePicker.value = '';
       if (dateWarning) dateWarning.innerText = '';
       if (placeWarning) placeWarning.innerText = '';
+      if (notifyStatus) {
+        notifyStatus.innerText = '';
+        notifyStatus.className = 'success-msg';
+      }
+      if (loadingMsg) loadingMsg.style.display = 'none';
       if (loveMessage) {
         loveMessage.style.display = 'none';
         loveMessage.innerText = '';
       }
     }
 
-    // ----- PAGE 1: Xử lý nút Không -----
-    noLoveBtn.addEventListener('click', function(e) {
+    // ====== GỬI EMAIL THÔNG BÁO QUA EMAILJS ======
+    function sendEmailNotification(formattedDate, placeDisplay) {
+      loadingMsg.style.display = 'block';
+      notifyStatus.innerText = '';
+      toFinalBtn.disabled = true;
+      toFinalBtn.style.opacity = '0.6';
+
+      // Template của bạn có: {{name}}, {{message}}, {{email}}
+      const templateParams = {
+        name: 'Em yêu',                           // 👈 Tên hiển thị
+        email: YOUR_EMAIL,                         // 👈 Email nhận thông báo
+        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
+      };
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(function(response) {
+          console.log('✅ Email sent!', response.status);
+          loadingMsg.style.display = 'none';
+          notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh thành công!';
+          notifyStatus.className = 'success-msg';
+          toFinalBtn.disabled = false;
+          toFinalBtn.style.opacity = '1';
+          
+          // Chuyển sang trang 4 sau 1.5 giây
+          setTimeout(() => {
+            showPage(page4);
+          }, 1500);
+        }, function(error) {
+          console.log('❌ Failed:', error);
+          loadingMsg.style.display = 'none';
+          notifyStatus.innerText = '⚠️ Lỗi gửi mail nhưng lịch hẹn vẫn được lưu nè!';
+          notifyStatus.className = 'error-msg';
+          toFinalBtn.disabled = false;
+          toFinalBtn.style.opacity = '1';
+          
+          // Vẫn chuyển trang dù lỗi
+          setTimeout(() => {
+            showPage(page4);
+          }, 1000);
+        });
+    }
+
+    // ====== PAGE 1 ======
+    noLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'block';
       loveMessage.innerText = '🙈 Oops sai rùi! Chọn lại đi em ơi 💗';
     });
 
-    // ----- PAGE 1: Nút Yêu nhiều -> sang trang 2 -----
     yesLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'none';
       resetSelectionState();
@@ -373,7 +407,7 @@
       showPage(page2);
     });
 
-    // ----- PAGE 2: chọn ngày -> sang trang 3 -----
+    // ====== PAGE 2 ======
     toPlaceBtn.addEventListener('click', function() {
       const dateValue = datePicker.value;
       if (!dateValue) {
@@ -384,9 +418,9 @@
       showPage(page3);
     });
 
-    // ----- PAGE 3: Xử lý chọn nơi -----
+    // ====== PAGE 3 ======
     placeChips.forEach(chip => {
-      chip.addEventListener('click', function(e) {
+      chip.addEventListener('click', function() {
         const place = this.dataset.place;
         placeChips.forEach(c => c.classList.remove('selected'));
         
@@ -402,65 +436,66 @@
           customPlaceInput.style.display = 'none';
           selectedPlace = place;
           this.classList.add('selected');
-          customPlaceText = '';
           customPlaceInput.value = '';
         }
         placeWarning.innerText = '';
+        notifyStatus.innerText = '';
       });
     });
 
-    // Khi người dùng gõ vào ô custom
     customPlaceInput.addEventListener('input', function() {
       const val = this.value.trim();
       if (val !== '') {
         selectedPlace = val;
-        customPlaceText = val;
         placeChips.forEach(c => c.classList.remove('selected'));
         customChip.classList.add('selected');
       } else {
         selectedPlace = null;
-        customPlaceText = '';
         customChip.classList.add('selected');
       }
       placeWarning.innerText = '';
+      notifyStatus.innerText = '';
     });
 
-    // ----- PAGE 3 -> PAGE 4 -----
+    // ====== GỬI LỊCH HẸN ======
     toFinalBtn.addEventListener('click', function() {
       if (!selectedPlace) {
         placeWarning.innerText = '💬 Bé chọn một nơi muốn đi nha (hoặc nhập khác)';
         return;
       }
+
       const dateVal = datePicker.value;
-      let displayDate = '📆 Chưa chọn ngày';
+      let displayDate = 'Chưa chọn ngày';
+      let formattedDate = 'Chưa chọn ngày';
       if (dateVal) {
         const [year, month, day] = dateVal.split('-');
-        displayDate = `📅 ${day}/${month}/${year}`;
+        displayDate = `${day}/${month}/${year}`;
+        formattedDate = `${day}/${month}/${year}`;
       }
-      
+
       let placeDisplay = '';
       if (selectedPlace === 'Đi ăn') placeDisplay = '🍣 Đi ăn';
       else if (selectedPlace === 'Đi chơi') placeDisplay = '🎢 Đi chơi';
       else if (selectedPlace === 'Đi lượn') placeDisplay = '🌃 Đi lượn';
       else placeDisplay = `✨ ${selectedPlace}`;
 
+      // Cập nhật summary box
       summaryBox.innerHTML = `
-        <div style="font-size:1.4rem; text-align:center; margin-bottom:10px;">📋 Chi tiết hẹn hò</div>
-        <div>${displayDate}</div>
+        <div style="font-size:1.3rem; text-align:center; margin-bottom:10px;">📋 Chi tiết hẹn hò</div>
+        <div>📅 ${displayDate}</div>
         <div>📍 Địa điểm: ${placeDisplay}</div>
         <div style="margin-top:12px; text-align:center; font-style:italic;">💞 Anh chờ em tới lun 💞</div>
       `;
-      
-      showPage(page4);
+
+      // Gửi email thông báo cho bạn
+      sendEmailNotification(formattedDate, placeDisplay);
     });
 
-    // ----- Restart -----
+    // ====== RESTART ======
     restartBtn.addEventListener('click', function() {
       resetSelectionState();
       showPage(page1);
-      if (loveMessage) {
-        loveMessage.style.display = 'none';
-      }
+      if (loveMessage) loveMessage.style.display = 'none';
       if (datePicker) {
         const today = new Date();
         const yyyy = today.getFullYear();
@@ -470,7 +505,7 @@
       }
     });
 
-    // Khởi tạo
+    // ====== KHỞI TẠO ======
     window.addEventListener('load', function() {
       if (datePicker) {
         const today = new Date();
