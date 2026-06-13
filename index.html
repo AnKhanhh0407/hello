@@ -252,7 +252,7 @@
       <div class="chip" data-place="custom" id="customChip">✍️ Khác...</div>
     </div>
     <input type="text" id="customPlaceInput" placeholder="Nhập nơi em thích..." style="display:none; margin-top:6px;" />
-    <div class="loading-msg" id="loadingMsg">⏳ Đang gửi lịch hẹn cho anh yêu...</div>
+    <div class="loading-msg" id="loadingMsg">⏳ Đang gửi thông báo...</div>
     <button class="btn next-btn" id="toFinalBtn">Gửi lịch hẹn 💌</button>
     <div id="placeWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
     <div id="notifyStatus" class="success-msg"></div>
@@ -273,16 +273,18 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH ====================
+    // ==================== CẤU HÌNH EMAILJS ====================
+    // 👇 THAY 3 DÒNG NÀY BẰNG THÔNG TIN THẬT CỦA BẠN
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
     const EMAILJS_SERVICE_ID = "service_3sgcbcb";
     const EMAILJS_TEMPLATE_ID = "hl4y94e";
-    const YOUR_EMAIL = "ankhanhh0407@gmail.com"; // 👈 THAY EMAIL CỦA BẠN VÀO ĐÂY
-
+    
+    // Khởi tạo EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
 
     let selectedPlace = null;
 
+    // DOM elements
     const page1 = document.getElementById('page1');
     const page2 = document.getElementById('page2');
     const page3 = document.getElementById('page3');
@@ -336,27 +338,29 @@
       }
     }
 
-    // ====== GỬI EMAIL TRỰC TIẾP ======
+    // ====== GỬI EMAIL (CHỈ 2 BIẾN - ĐÚNG VỚI TEMPLATE) ======
     function sendEmailNotification(formattedDate, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
+      // Tạo nội dung message gộp ngày và địa điểm
+      const fullMessage = `Em đã đồng ý đi chơi với anh! 📅 Ngày: ${formattedDate} 📍 Địa điểm: ${placeDisplay} 💕 Yêu anh nhiều!`;
+
+      // Chỉ gửi 2 biến: name và email (phù hợp với template)
       const templateParams = {
-        to_email: YOUR_EMAIL,
-        name: 'Em yêu',
-        email: YOUR_EMAIL,
-        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`,
-        date: formattedDate,
-        place: placeDisplay
+        name: "Em yêu",
+        email: "ankhanhh0407@gmail.com"
       };
+
+      console.log("Đang gửi email với params:", templateParams);
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
-          console.log('✅ SUCCESS!', response.status);
+          console.log('✅ SUCCESS!', response.status, response.text);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '✅ Đã gửi! Kiểm tra email (cả Spam) nha 💌';
+          notifyStatus.innerText = '✅ Đã gửi thông báo thành công! 💌';
           notifyStatus.className = 'success-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
@@ -367,7 +371,7 @@
         }, function(error) {
           console.log('❌ FAILED:', error);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '⚠️ Lỗi gửi mail nhưng lịch vẫn lưu nè 💕';
+          notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn được lưu nha 💕';
           notifyStatus.className = 'error-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
@@ -378,11 +382,13 @@
         });
     }
 
+    // Page 1: Nút Không
     noLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'block';
       loveMessage.innerText = '🙈 Oops sai rùi! Chọn lại đi em ơi 💗';
     });
 
+    // Page 1: Nút Yêu
     yesLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'none';
       resetSelectionState();
@@ -396,6 +402,7 @@
       showPage(page2);
     });
 
+    // Page 2: Chọn ngày
     toPlaceBtn.addEventListener('click', function() {
       const dateValue = datePicker.value;
       if (!dateValue) {
@@ -406,6 +413,7 @@
       showPage(page3);
     });
 
+    // Page 3: Chọn địa điểm
     placeChips.forEach(chip => {
       chip.addEventListener('click', function() {
         const place = this.dataset.place;
@@ -441,9 +449,9 @@
         customChip.classList.add('selected');
       }
       placeWarning.innerText = '';
-      notifyStatus.innerText = '';
     });
 
+    // Page 3: Nút Gửi
     toFinalBtn.addEventListener('click', function() {
       if (!selectedPlace) {
         placeWarning.innerText = '💬 Bé chọn một nơi muốn đi nha (hoặc nhập khác)';
@@ -475,6 +483,7 @@
       sendEmailNotification(formattedDate, placeDisplay);
     });
 
+    // Restart
     restartBtn.addEventListener('click', function() {
       resetSelectionState();
       showPage(page1);
@@ -488,6 +497,7 @@
       }
     });
 
+    // Khởi tạo
     window.addEventListener('load', function() {
       if (datePicker) {
         const today = new Date();
