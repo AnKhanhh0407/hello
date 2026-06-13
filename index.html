@@ -273,13 +273,12 @@
 
 <script>
   (function() {
-    // ==================== EMAILJS V4 ====================
+    // ==================== CẤU HÌNH ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
     const EMAILJS_SERVICE_ID = "service_3sgcbcb";
     const EMAILJS_TEMPLATE_ID = "hl4y94e";
-    const YOUR_EMAIL = "ankhanhh0407@gmail.com"; // 👈 THAY EMAIL CỦA BẠN
+    const YOUR_EMAIL = "ankhanhh0407@gmail.com"; // 👈 THAY EMAIL CỦA BẠN VÀO ĐÂY
 
-    // Khởi tạo EmailJS SDK v4
     emailjs.init(EMAILJS_PUBLIC_KEY);
 
     let selectedPlace = null;
@@ -337,25 +336,27 @@
       }
     }
 
-    // ====== GỬI EMAIL DÙNG SDK V4 ======
+    // ====== GỬI EMAIL TRỰC TIẾP ======
     function sendEmailNotification(formattedDate, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Template params - KHỚP VỚI TEMPLATE CỦA BẠN
       const templateParams = {
+        to_email: YOUR_EMAIL,
         name: 'Em yêu',
         email: YOUR_EMAIL,
-        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
+        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`,
+        date: formattedDate,
+        place: placeDisplay
       };
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
-          console.log('✅ SUCCESS!', response.status, response.text);
+          console.log('✅ SUCCESS!', response.status);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh! Kiểm tra email nha 💌';
+          notifyStatus.innerText = '✅ Đã gửi! Kiểm tra email (cả Spam) nha 💌';
           notifyStatus.className = 'success-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
@@ -364,9 +365,9 @@
             showPage(page4);
           }, 1500);
         }, function(error) {
-          console.log('❌ FAILED...', error);
+          console.log('❌ FAILED:', error);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '⚠️ Gửi mail lỗi nhưng lịch vẫn lưu nè! 💕';
+          notifyStatus.innerText = '⚠️ Lỗi gửi mail nhưng lịch vẫn lưu nè 💕';
           notifyStatus.className = 'error-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
