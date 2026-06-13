@@ -273,11 +273,10 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH EMAILJS ====================
-    // 👇 THAY 3 DÒNG NÀY BẰNG THÔNG TIN THẬT CỦA BẠN
+    // ==================== CẤU HÌNH EMAILJS (ĐÃ SỬA ĐÚNG) ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
-    const EMAILJS_SERVICE_ID = "service_3sgcbcb";
-    const EMAILJS_TEMPLATE_ID = "hl4y94e";
+    const EMAILJS_SERVICE_ID = "service_d11essi";   // ✅ ĐÃ SỬA ĐÚNG
+    const EMAILJS_TEMPLATE_ID = "hl4y94e";          // ✅ GIỮ NGUYÊN
     
     // Khởi tạo EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -338,29 +337,30 @@
       }
     }
 
-    // ====== GỬI EMAIL (CHỈ 2 BIẾN - ĐÚNG VỚI TEMPLATE) ======
+    // ====== GỬI EMAIL ======
     function sendEmailNotification(formattedDate, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      // Tạo nội dung message gộp ngày và địa điểm
-      const fullMessage = `Em đã đồng ý đi chơi với anh! 📅 Ngày: ${formattedDate} 📍 Địa điểm: ${placeDisplay} 💕 Yêu anh nhiều!`;
+      // Tạo nội dung tin nhắn
+      const fullMessage = `✨ Em yêu đã đặt lịch hẹn với anh! ✨\n\n📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n\n💕 Yêu anh nhiều! 💕`;
 
-      // Chỉ gửi 2 biến: name và email (phù hợp với template)
+      // Template chỉ cần name và email
       const templateParams = {
-        name: "Em yêu",
+        name: "Em yêu 💕",
         email: "ankhanhh0407@gmail.com"
       };
 
-      console.log("Đang gửi email với params:", templateParams);
+      console.log("Đang gửi email với Service ID:", EMAILJS_SERVICE_ID);
+      console.log("Template ID:", EMAILJS_TEMPLATE_ID);
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
-          console.log('✅ SUCCESS!', response.status, response.text);
+          console.log('✅ GỬI THÀNH CÔNG!', response.status, response.text);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '✅ Đã gửi thông báo thành công! 💌';
+          notifyStatus.innerText = '✅ Đã gửi thông báo! Kiểm email (cả Spam) nha 💌';
           notifyStatus.className = 'success-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
@@ -369,9 +369,9 @@
             showPage(page4);
           }, 1500);
         }, function(error) {
-          console.log('❌ FAILED:', error);
+          console.log('❌ LỖI:', error);
           loadingMsg.style.display = 'none';
-          notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn được lưu nha 💕';
+          notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn lưu nha 💕';
           notifyStatus.className = 'error-msg';
           toFinalBtn.disabled = false;
           toFinalBtn.style.opacity = '1';
