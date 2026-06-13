@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no, viewport-fit=cover">
   <title>Hẹn người yêu đi chơi 💕</title>
+  
+  <!-- EmailJS SDK v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  
   <style>
     * {
       margin: 0;
@@ -269,8 +273,14 @@
 
 <script>
   (function() {
-    // ==================== GOOGLE APPS SCRIPT URL ====================
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxxx/exec"; // 👈 THAY BẰNG URL CỦA BẠN
+    // ==================== EMAILJS V4 ====================
+    const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
+    const EMAILJS_SERVICE_ID = "service_3sgcbcb";
+    const EMAILJS_TEMPLATE_ID = "hl4y94e";
+    const YOUR_EMAIL = "ankhanhh0407@gmail.com"; // 👈 THAY EMAIL CỦA BẠN
+
+    // Khởi tạo EmailJS SDK v4
+    emailjs.init(EMAILJS_PUBLIC_KEY);
 
     let selectedPlace = null;
 
@@ -327,46 +337,44 @@
       }
     }
 
-    // ====== GỬI QUA GOOGLE APPS SCRIPT ======
-    function sendNotification(dateVal, placeDisplay) {
+    // ====== GỬI EMAIL DÙNG SDK V4 ======
+    function sendEmailNotification(formattedDate, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
-      fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date: dateVal,
-          place: placeDisplay
-        })
-      })
-      .then(() => {
-        loadingMsg.style.display = 'none';
-        notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh! Kiểm tra email nha 💌';
-        notifyStatus.className = 'success-msg';
-        toFinalBtn.disabled = false;
-        toFinalBtn.style.opacity = '1';
-        
-        setTimeout(() => {
-          showPage(page4);
-        }, 1500);
-      })
-      .catch(() => {
-        loadingMsg.style.display = 'none';
-        notifyStatus.innerText = '⚠️ Lỗi mạng nhưng lịch vẫn lưu nè! 💕';
-        notifyStatus.className = 'error-msg';
-        toFinalBtn.disabled = false;
-        toFinalBtn.style.opacity = '1';
-        
-        setTimeout(() => {
-          showPage(page4);
-        }, 1000);
-      });
+      // Template params - KHỚP VỚI TEMPLATE CỦA BẠN
+      const templateParams = {
+        name: 'Em yêu',
+        email: YOUR_EMAIL,
+        message: `📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n💞 Vào xem web ngay đi anh!`
+      };
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(function(response) {
+          console.log('✅ SUCCESS!', response.status, response.text);
+          loadingMsg.style.display = 'none';
+          notifyStatus.innerText = '✅ Đã gửi lịch hẹn cho anh! Kiểm tra email nha 💌';
+          notifyStatus.className = 'success-msg';
+          toFinalBtn.disabled = false;
+          toFinalBtn.style.opacity = '1';
+          
+          setTimeout(() => {
+            showPage(page4);
+          }, 1500);
+        }, function(error) {
+          console.log('❌ FAILED...', error);
+          loadingMsg.style.display = 'none';
+          notifyStatus.innerText = '⚠️ Gửi mail lỗi nhưng lịch vẫn lưu nè! 💕';
+          notifyStatus.className = 'error-msg';
+          toFinalBtn.disabled = false;
+          toFinalBtn.style.opacity = '1';
+          
+          setTimeout(() => {
+            showPage(page4);
+          }, 1000);
+        });
     }
 
     noLoveBtn.addEventListener('click', function() {
@@ -463,7 +471,7 @@
         <div style="margin-top:12px; text-align:center; font-style:italic;">💞 Anh chờ em tới lun 💞</div>
       `;
 
-      sendNotification(formattedDate, placeDisplay);
+      sendEmailNotification(formattedDate, placeDisplay);
     });
 
     restartBtn.addEventListener('click', function() {
