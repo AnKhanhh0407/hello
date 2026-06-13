@@ -41,7 +41,7 @@
     .hidden-page { display: none !important; }
 
     h2 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #d43f6b;
       margin-bottom: 10px;
       font-weight: 700;
@@ -121,17 +121,28 @@
       border: 1px dashed #f590a8;
     }
 
-    input[type="date"], input[type="text"] {
+    input[type="date"], input[type="time"], input[type="text"] {
       width: 100%;
       padding: 14px 18px;
       border-radius: 60px;
       border: 1px solid #ffb7c5;
       font-size: 1.1rem;
-      margin: 8px 0 14px;
+      margin: 8px 0;
       outline: none;
       text-align: center;
       background: white;
       font-family: inherit;
+    }
+
+    .datetime-group {
+      display: flex;
+      gap: 10px;
+      margin: 8px 0 14px;
+    }
+    
+    .datetime-group input {
+      flex: 1;
+      margin: 0;
     }
 
     .option-group {
@@ -235,9 +246,12 @@
   </div>
 
   <div id="page2" class="page hidden-page">
-    <div class="emoji-big">📅✨</div>
-    <h2>Chọn ngày đi chơi nè</h2>
-    <input type="date" id="datePicker" />
+    <div class="emoji-big">📅⏰✨</div>
+    <h2>Chọn ngày và giờ hẹn</h2>
+    <div class="datetime-group">
+      <input type="date" id="datePicker" />
+      <input type="time" id="timePicker" />
+    </div>
     <button class="btn next-btn" id="toPlaceBtn">Tiếp theo ➡️</button>
     <div id="dateWarning" style="color:#d43f6b; margin-top:6px; font-weight:500;"></div>
   </div>
@@ -273,10 +287,10 @@
 
 <script>
   (function() {
-    // ==================== CẤU HÌNH EMAILJS (ĐÃ CẬP NHẬT) ====================
+    // ==================== CẤU HÌNH EMAILJS ====================
     const EMAILJS_PUBLIC_KEY = "nAk_eOjPvp5ZPxdsE";
-    const EMAILJS_SERVICE_ID = "service_nk3b54o";   // ✅ SERVICE ID MỚI
-    const EMAILJS_TEMPLATE_ID = "template_zp410qu";  // ✅ TEMPLATE ID
+    const EMAILJS_SERVICE_ID = "service_nk3b54o";
+    const EMAILJS_TEMPLATE_ID = "template_zp410qu";
     
     // Khởi tạo EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -294,6 +308,7 @@
     const loveMessage = document.getElementById('loveMessage');
 
     const datePicker = document.getElementById('datePicker');
+    const timePicker = document.getElementById('timePicker');
     const toPlaceBtn = document.getElementById('toPlaceBtn');
     const dateWarning = document.getElementById('dateWarning');
 
@@ -324,6 +339,7 @@
       }
       placeChips.forEach(chip => chip.classList.remove('selected'));
       if (datePicker) datePicker.value = '';
+      if (timePicker) timePicker.value = '';
       if (dateWarning) dateWarning.innerText = '';
       if (placeWarning) placeWarning.innerText = '';
       if (notifyStatus) {
@@ -338,21 +354,22 @@
     }
 
     // ====== GỬI EMAIL ======
-    function sendEmailNotification(formattedDate, placeDisplay) {
+    function sendEmailNotification(formattedDate, formattedTime, placeDisplay) {
       loadingMsg.style.display = 'block';
       notifyStatus.innerText = '';
       toFinalBtn.disabled = true;
       toFinalBtn.style.opacity = '0.6';
 
       // Tạo nội dung tin nhắn đầy đủ
-      const fullMessage = `✨ Em yêu đã đặt lịch hẹn với anh! ✨\n\n📅 Ngày: ${formattedDate}\n📍 Địa điểm: ${placeDisplay}\n\n💕 Yêu anh nhiều! 💕`;
+      const fullMessage = `✨ Em yêu đã đặt lịch hẹn với anh! ✨\n\n📅 Ngày: ${formattedDate}\n⏰ Giờ: ${formattedTime}\n📍 Địa điểm: ${placeDisplay}\n\n💕 Yêu anh nhiều! 💕`;
 
-      // Gửi với các biến phù hợp với template
+      // Gửi với các biến
       const templateParams = {
         name: "Em yêu 💕",
         email: "ankhanhh0407@gmail.com",
         message: fullMessage,
         date: formattedDate,
+        time: formattedTime,
         place: placeDisplay
       };
 
@@ -362,7 +379,7 @@
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(function(response) {
-          console.log('✅ THÀNH CÔNG!', response.status, response.text);
+          console.log('✅ THÀNH CÔNG!', response.status);
           loadingMsg.style.display = 'none';
           notifyStatus.innerText = '✅ Đã gửi thông báo! Kiểm tra email (cả Spam) nha 💌';
           notifyStatus.className = 'success-msg';
@@ -373,7 +390,7 @@
             showPage(page4);
           }, 1500);
         }, function(error) {
-          console.log('❌ LỖI CHI TIẾT:', error);
+          console.log('❌ LỖI:', error);
           loadingMsg.style.display = 'none';
           notifyStatus.innerText = '⚠️ Không gửi được mail nhưng lịch vẫn được lưu nha 💕';
           notifyStatus.className = 'error-msg';
@@ -396,21 +413,29 @@
     yesLoveBtn.addEventListener('click', function() {
       loveMessage.style.display = 'none';
       resetSelectionState();
-      if (datePicker) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        datePicker.value = `${yyyy}-${mm}-${dd}`;
-      }
+      
+      // Set mặc định hôm nay và 19:00
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      datePicker.value = `${yyyy}-${mm}-${dd}`;
+      timePicker.value = "19:00";
+      
       showPage(page2);
     });
 
-    // Page 2: Chọn ngày
+    // Page 2: Chọn ngày giờ
     toPlaceBtn.addEventListener('click', function() {
       const dateValue = datePicker.value;
+      const timeValue = timePicker.value;
+      
       if (!dateValue) {
-        dateWarning.innerText = '⚠️ Bé chọn một ngày đi chơi nha~';
+        dateWarning.innerText = '⚠️ Bé chọn ngày đi chơi nha~';
+        return;
+      }
+      if (!timeValue) {
+        dateWarning.innerText = '⚠️ Bé chọn giờ đi chơi nha~';
         return;
       }
       dateWarning.innerText = '';
@@ -463,12 +488,21 @@
       }
 
       const dateVal = datePicker.value;
+      const timeVal = timePicker.value;
+      
       let displayDate = 'Chưa chọn ngày';
       let formattedDate = 'Chưa chọn ngày';
       if (dateVal) {
         const [year, month, day] = dateVal.split('-');
         displayDate = `${day}/${month}/${year}`;
         formattedDate = `${day}/${month}/${year}`;
+      }
+      
+      let displayTime = 'Chưa chọn giờ';
+      let formattedTime = 'Chưa chọn giờ';
+      if (timeVal) {
+        displayTime = timeVal;
+        formattedTime = timeVal;
       }
 
       let placeDisplay = '';
@@ -479,12 +513,13 @@
 
       summaryBox.innerHTML = `
         <div style="font-size:1.3rem; text-align:center; margin-bottom:10px;">📋 Chi tiết hẹn hò</div>
-        <div>📅 ${displayDate}</div>
+        <div>📅 Ngày: ${displayDate}</div>
+        <div>⏰ Giờ: ${displayTime}</div>
         <div>📍 Địa điểm: ${placeDisplay}</div>
         <div style="margin-top:12px; text-align:center; font-style:italic;">💞 Anh chờ em tới lun 💞</div>
       `;
 
-      sendEmailNotification(formattedDate, placeDisplay);
+      sendEmailNotification(formattedDate, formattedTime, placeDisplay);
     });
 
     // Restart
@@ -492,24 +527,16 @@
       resetSelectionState();
       showPage(page1);
       if (loveMessage) loveMessage.style.display = 'none';
-      if (datePicker) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        datePicker.value = `${yyyy}-${mm}-${dd}`;
-      }
     });
 
     // Khởi tạo
     window.addEventListener('load', function() {
-      if (datePicker) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        datePicker.value = `${yyyy}-${mm}-${dd}`;
-      }
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      datePicker.value = `${yyyy}-${mm}-${dd}`;
+      timePicker.value = "19:00";
       showPage(page1);
     });
   })();
